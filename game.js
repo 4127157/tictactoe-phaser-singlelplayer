@@ -7,7 +7,7 @@ var gameConfig = {
     },
     backgroundColor: 'rgba(255,255,255,0)',
     transparent:false,
-    scene: [Scene1],
+    scene: [Scene1, Scene2, Scene3],
     pixelArt: true
 };
 

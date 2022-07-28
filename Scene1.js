@@ -1,6 +1,6 @@
 class Scene1 extends Phaser.Scene {
     constructor(){
-        super("menuScreen");
+        super("bootScreen");
     }
 
 
@@ -8,9 +8,13 @@ class Scene1 extends Phaser.Scene {
         this.load.image('cross', './assets/Sprite-0001_512.png');
         this.load.image('circle', './assets/Sprite-0002_512.png');
         this.load.image('board', './assets/board_512.png');
+
+        this.load.bitmapFont("defaultFont", './fonts/upheaval.png', './fonts/upheaval.xml');
     }
 
     create(){
+        //this.add.text(20,20, "Loading game...");
+        this.scene.start("menuScreen");
     }
 
     update(){
