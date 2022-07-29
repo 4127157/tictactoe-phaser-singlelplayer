@@ -50,11 +50,6 @@ class Scene2 extends Phaser.Scene {
 
         function clickCross(pointer){
             this.setTintFill(0xff0000);
-            //this.scene.start('playGame'); - not functional for unknown reason
-            startNextScene(_this);
-        }
-
-        function startNextScene(_this){
             _this.scene.start('playGame');
             _this = null;
         }
