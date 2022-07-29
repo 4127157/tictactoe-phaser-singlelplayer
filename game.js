@@ -1,4 +1,4 @@
-var gameConfig = {
+var config = {
     type:Phaser.AUTO,
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -11,4 +11,8 @@ var gameConfig = {
     pixelArt: true
 };
 
-var game = new Phaser.Game(gameConfig);
+//globals
+const dHeight = config.scale.height;
+const dWidth = config.scale.width;
+
+var game = new Phaser.Game(config);
