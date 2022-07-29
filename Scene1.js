@@ -14,6 +14,7 @@ class Scene1 extends Phaser.Scene {
 
     create(){
         this.add.text(20,20, "Loading game...");
+        console.log("game loaded successfully");
         this.scene.start("menuScreen");
     }
 
