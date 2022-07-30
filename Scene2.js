@@ -46,9 +46,10 @@ class Scene2 extends Phaser.Scene {
         this.circle.setInteractive();
         this.cross.setInteractive();
         let _this = this;
-        this.cross.on('pointerdown', clickCross);
+        this.cross.on('pointerdown', clickBtn);
+        this.circle.on('pointerdown', clickBtn);
 
-        function clickCross(pointer){
+        function clickBtn(pointer){
             this.setTintFill(0xff0000);
             _this.scene.start('playGame');
             _this = null;
