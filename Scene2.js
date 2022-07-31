@@ -2,11 +2,6 @@ class Scene2 extends Phaser.Scene {
     constructor(){
         super("menuScreen");
     
-    // var cross = this.cross;
-    // var circle = this.circle;
-    // var boundsCross = this.boundsCross;
-    // var boundsCircle = this.boundsCircle;
-    // var graphics = this.graphics;
     }
 
 
@@ -15,7 +10,7 @@ class Scene2 extends Phaser.Scene {
     }
 
     create(){
-        this.add.bitmapText(20,20, "defaultFont", "CHOOSE TEAM", 32);
+        this.add.bitmapText(20,20, "defaultFont", "Who goes first?", 24);
         
         let scaleF = 0.125;
         let btnCross = this.add.rectangle(
@@ -54,7 +49,7 @@ class Scene2 extends Phaser.Scene {
         function clickTeamBtn(){
             console.log(this.name);
             this.setTintFill(0xff0000);
-            _this.scene.start("playGame");
+            _this.scene.start("playGame", { team: this.name });
             _this = null;
         }
 
