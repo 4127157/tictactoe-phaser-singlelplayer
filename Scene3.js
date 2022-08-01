@@ -56,6 +56,7 @@ class Scene3 extends Phaser.Scene {
             inpZone.setDataEnabled();
             inpZone.setData({index: k});
             inpZone.setName(k+'');
+            inpZone.setOrigin(0);
             inpZone.on('pointerdown', handleBoxClick);
             zonesArr.push(inpZone);
             inpZone = null;
