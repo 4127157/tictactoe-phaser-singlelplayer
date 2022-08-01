@@ -45,11 +45,34 @@ class Scene3 extends Phaser.Scene {
             }
             boxY = boxH*(i+1)+boardY; 
         }
-        
+
+        let zonesArr = [];
+        let _this = this;
         graphics.lineStyle(1, 0xff0000);
         for(let k = 1; k<10; k++){
             graphics.strokeRect(boxObj[k][0], boxObj[k][1], boxObj[k][2], boxObj[k][3]);
+            let inpZone = new InpZone(this, boxObj[k][0], boxObj[k][1], boxObj[k][2], boxObj[k][3]);
+            inpZone.setInteractive();
+            inpZone.setDataEnabled();
+            inpZone.setData({index: k});
+            inpZone.setName(k+'');
+            inpZone.on('pointerdown', handleBoxClick);
+            zonesArr.push(inpZone);
+            inpZone = null;
         }
+        console.log(zonesArr);
+        graphics.lineStyle(1, 0x00ff00);
+        for(let x = 0; x<zonesArr.length; x++){
+            graphics.strokeRectShape(zonesArr[x].getBounds());
+        }
+
+        function handleBoxClick(){
+
+            console.log(this.getData('index'));
+            console.log(this.name);
+        }
+
+
     }
     update(){}
 
