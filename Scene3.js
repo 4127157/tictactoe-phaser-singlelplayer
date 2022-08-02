@@ -15,15 +15,10 @@ class Scene3 extends Phaser.Scene {
 
         let graphics = this.add.graphics();
 
-        let boardBounds = this.board.getBounds();
-        graphics.lineStyle(1, 0x000000);
-        // graphics.strokeRectShape(boardBounds);
         let boardX = this.board.getTopLeft().x,
             boardY = this.board.getTopLeft().y,
             boardW = this.board.displayWidth,
             boardH = this.board.displayHeight;
-
-        graphics.strokeRect(boardX, boardY, boardW, boardH);
 
         let boxObj = {};
         let boxX = boardX, 
@@ -47,30 +42,23 @@ class Scene3 extends Phaser.Scene {
         }
 
         let zonesArr = [];
-        let _this = this;
-        graphics.lineStyle(1, 0xff0000);
         for(let k = 1; k<10; k++){
-            graphics.strokeRect(boxObj[k][0], boxObj[k][1], boxObj[k][2], boxObj[k][3]);
-            let inpZone = new InpZone(this, boxObj[k][0], boxObj[k][1], boxObj[k][2], boxObj[k][3]);
+            let inpZone = new InpZone(this, ...boxObj[k]);
             inpZone.setInteractive();
             inpZone.setDataEnabled();
             inpZone.setData({index: k});
-            inpZone.setName(k+'');
             inpZone.setOrigin(0);
             inpZone.on('pointerdown', handleBoxClick);
             zonesArr.push(inpZone);
             inpZone = null;
         }
-        console.log(zonesArr);
         graphics.lineStyle(1, 0x00ff00);
         for(let x = 0; x<zonesArr.length; x++){
             graphics.strokeRectShape(zonesArr[x].getBounds());
         }
 
-        function handleBoxClick(){
-
+        function handleBoxClick() {
             console.log(this.getData('index'));
-            console.log(this.name);
         }
 
 
@@ -78,7 +66,7 @@ class Scene3 extends Phaser.Scene {
     update(){}
 
     /*TODO:
-        * - Add input zones
+        * 
         * - on click for each zone it will be assigned a value based on current
         * team
         * - on click on zone spawn an image in that zone of that team sign
