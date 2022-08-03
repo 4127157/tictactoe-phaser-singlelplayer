@@ -4,7 +4,8 @@ class Scene3 extends Phaser.Scene {
     }
 
     init(data){
-        console.log(data);
+        console.log(data.team);
+        this.team = data.team;
     }
     preload(){}
     create(){
@@ -13,12 +14,12 @@ class Scene3 extends Phaser.Scene {
         this.add.bitmapText(20,60, "defaultFont", "You can only tap once, be careful :P", 14);
         this.board = this.add.image(dWidth/2, dHeight/2, "board").setScale(0.9).setOrigin(0.5);
 
+        let team = this.team;
+
         let graphics = this.add.graphics();
 
         let boardX = this.board.getTopLeft().x,
-            boardY = this.board.getTopLeft().y,
-            boardW = this.board.displayWidth,
-            boardH = this.board.displayHeight;
+            boardY = this.board.getTopLeft().y;
 
         let boxObj = {};
         let boxX = boardX, 
@@ -46,7 +47,7 @@ class Scene3 extends Phaser.Scene {
             let inpZone = new InpZone(this, ...boxObj[k]);
             inpZone.setInteractive();
             inpZone.setDataEnabled();
-            inpZone.setData({index: k});
+            inpZone.setData('index', k);
             inpZone.setOrigin(0);
             inpZone.on('pointerdown', handleBoxClick);
             zonesArr.push(inpZone);
@@ -58,7 +59,9 @@ class Scene3 extends Phaser.Scene {
         }
 
         function handleBoxClick() {
-            console.log(this.getData('index'));
+            this.setData('team', team);
+            console.log(this.data.values.index);
+            console.log(this.data.values.team);
         }
 
 
