@@ -61,12 +61,14 @@ class Scene3 extends Phaser.Scene {
         let _this = this;
         function handleBoxClick() {
             this.setData('team', team);
+            let tImg = _this.add.image(this.x, this.y, team)
+                .setDisplayOrigin(this.displayOriginX - 40, this.displayOriginY - 40)
+                .setDisplaySize(this.width - (this.width*0.145), this.height - (this.height*0.145));
             if(team === 'cross'){
-                 _this.add.image(this.x, this.y, "cross")
-                     .setDisplayOrigin(this.displayOriginX - 40, this.displayOriginY - 40)
-                     .setDisplaySize(this.width - (this.width*0.125), this.height - (this.height*0.125));
                 team = 'circle';
             } else {
+                tImg.setDisplayOrigin(this.displayOriginX - 50, this.displayOriginY - 50)
+                tImg.setDisplaySize(this.width - (this.width*0.165), this.height - (this.height*0.165));
                 team = 'cross';
             }
             console.log(this.data.values.index);
