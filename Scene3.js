@@ -10,11 +10,31 @@ class Scene3 extends Phaser.Scene {
     preload(){}
     create(){
 
-        this.add.bitmapText(20,20, "defaultFont", "In Scene 3", 32);
-        this.add.bitmapText(20,60, "defaultFont", "You can only tap once, be careful :P", 14);
-        this.board = this.add.image(dWidth/2, dHeight/2, "board").setScale(0.9).setOrigin(0.5);
+        this.add.bitmapText(
+            20,
+            20,
+            "defaultFont", 
+            "In Scene 3", 
+            32
+        );
+
+        this.add.bitmapText(
+            20,
+            60,
+            "defaultFont",
+            "You can only tap once, be careful :P",
+            14
+        );
+
+        this.board = this.add.image(dWidth/2, dHeight/2, "board")
+                        .setScale(0.9)
+                        .setOrigin(0.5);
 
         let team = this.team;
+
+        if(team === 'circle'){
+
+        }
 
         let graphics = this.add.graphics();
 
@@ -47,7 +67,10 @@ class Scene3 extends Phaser.Scene {
             let inpZone = new InpZone(this, ...boxObj[k]);
             inpZone.setInteractive();
             inpZone.setDataEnabled();
-            inpZone.setData('index', k);
+            inpZone.setData({
+                index: k,
+                team: 0
+            });
             inpZone.setOrigin(0);
             inpZone.on('pointerdown', handleBoxClick);
             zonesArr.push(inpZone);
@@ -59,20 +82,85 @@ class Scene3 extends Phaser.Scene {
         }
 
         let _this = this;
+        let drawn = 0;
         function handleBoxClick() {
             this.setData('team', team);
-            let tImg = _this.add.image(this.x, this.y, team)
-                .setDisplayOrigin(this.displayOriginX - 40, this.displayOriginY - 40)
-                .setDisplaySize(this.width - (this.width*0.145), this.height - (this.height*0.145));
-            if(team === 'cross'){
-                team = 'circle';
-            } else {
-                tImg.setDisplayOrigin(this.displayOriginX - 50, this.displayOriginY - 50)
-                tImg.setDisplaySize(this.width - (this.width*0.165), this.height - (this.height*0.165));
-                team = 'cross';
+            if(!this.getData('drawing')){
+                //Checks if there's nothing drawn : false
+                drawn++;
+                //How many items have been drawn
+                this.setData('drawing', true);
+                //Set that it's drawn so it doesn't get overwritten
+                let tImg = _this.add.image(this.x, this.y, team)
+                            .setDisplayOrigin(this.displayOriginX - 40, 
+                                              this.displayOriginY - 40)
+                            .setDisplaySize(this.width - (this.width*0.145), 
+                                            this.height - (this.height*0.145));
+                //Image to display depending on team currently
+                if(team === 'cross'){
+                    team = 'circle';
+                    //Flip team
+                } else {
+                    tImg.setDisplayOrigin(this.displayOriginX - 50, 
+                                          this.displayOriginY - 50)
+                    tImg.setDisplaySize(this.width - (this.width*0.165), 
+                                        this.height - (this.height*0.165));
+                    //Special display rules for cross because of improper
+                    //sizing
+                    team = 'cross';
+                    //Flip
+                }
             }
-            console.log(this.data.values.index);
-            console.log(this.data.values.team);
+
+            if(checkWin(zonesArr) === false && drawn === 9){
+                disableMoves(zonesArr);
+                console.log("game's tied!");
+            }
+            console.log(checkWin(zonesArr));
+        }
+
+        function disableMoves(arr){
+            for(let i = 0; i<arr.length; i++){
+                arr[i].disableInteractive();
+            }
+        }
+
+        function checkWin(arr){
+            let checkPats = [
+               [1,2,3],
+               [4,5,6],
+               [7,8,9],
+               [1,4,7],
+               [2,5,8],
+               [3,6,9],
+               [1,5,9],
+               [3,5,7]
+           ];
+           
+            let count = 0;
+            let tempTeam = '';
+            for(let i=0;i<checkPats.length;i++){
+                for(let j=0; j<checkPats[i].length; j++){
+                    let v = arr[(checkPats[i][j])-1]
+                    .data
+                    .values
+                    .team;
+                    if(v != 0 && j == 0) {
+                        tempTeam = v;
+                        count++;
+                    } else {
+                        if(v === tempTeam){
+                            count++;
+                        }
+                    }
+                }
+                if(count === 3){
+                    return tempTeam;
+                } 
+                tempTeam = '';
+                count = 0;
+            }
+            return false;
         }
 
 
