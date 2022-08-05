@@ -49,8 +49,16 @@ class Scene2 extends Phaser.Scene {
         function clickTeamBtn(){
             console.log(this.name);
             this.setTintFill(0xff0000);
+            // function sceneBool(){
+            //     return _this.scene("playGame").isBooted;
+            // }
+            // if(sceneBool() === true){
+            // }
+            // if(sceneBool() === false){
+            _this.scene.stop("playGame");
             _this.scene.start("playGame", { team: this.name });
             _this = null;
+            //}            
         }
 
     }

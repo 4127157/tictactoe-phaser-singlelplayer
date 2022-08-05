@@ -10,31 +10,45 @@ class Scene3 extends Phaser.Scene {
     preload(){}
     create(){
 
-        this.add.bitmapText(
-            20,
-            20,
-            "defaultFont", 
-            "In Scene 3", 
-            32
-        );
+        const GAME_TIE = 0;
+        const X_WON = 1;
+        const O_WON = 2;
 
         this.add.bitmapText(
             20,
-            60,
+            30,
             "defaultFont",
             "You can only tap once, be careful :P",
-            14
+            21   
         );
 
         this.board = this.add.image(dWidth/2, dHeight/2, "board")
                         .setScale(0.9)
                         .setOrigin(0.5);
 
-        let team = this.team;
+        let turnTxt = this.add.bitmapText(
+            dWidth/4,
+            80,
+            "defaultFont"
+        );
+        function setTurnText(team){
+            if(team === 'circle'){
+                turnTxt.setText("TURN : O");
+            }
 
-        if(team === 'circle'){
-
+            if(team === 'cross') {
+                turnTxt.setText("TURN : X");
+            }
         }
+
+        let runTeam = this.team;
+        setTurnText(runTeam);
+
+            
+        turnTxt.setOrigin(0.5, 0);
+        turnTxt.setX(dWidth/2);
+        turnTxt.setFontSize(64);
+    
 
         let graphics = this.add.graphics();
 
@@ -83,6 +97,7 @@ class Scene3 extends Phaser.Scene {
 
         let _this = this;
         let drawn = 0;
+        let team = runTeam;
         function handleBoxClick() {
             this.setData('team', team);
             if(!this.getData('drawing')){
@@ -99,6 +114,7 @@ class Scene3 extends Phaser.Scene {
                 //Image to display depending on team currently
                 if(team === 'cross'){
                     team = 'circle';
+                    turnTxt.setText("TURN : O");
                     //Flip team
                 } else {
                     tImg.setDisplayOrigin(this.displayOriginX - 50, 
@@ -108,16 +124,61 @@ class Scene3 extends Phaser.Scene {
                     //Special display rules for cross because of improper
                     //sizing
                     team = 'cross';
+                    turnTxt.setText("TURN : X");
                     //Flip
                 }
             }
-
-            if(checkWin(zonesArr) === false && drawn === 9){
-                disableMoves(zonesArr);
-                console.log("game's tied!");
+                
+            if(checkWin(zonesArr) === GAME_TIE && drawn === 9){
+                gameOver(GAME_TIE);
             }
-            console.log(checkWin(zonesArr));
+            if(checkWin(zonesArr) !== GAME_TIE){
+                gameOver(checkWin(zonesArr));
+            }
         }
+        
+        function gameOver(RESULT){
+            disableMoves(zonesArr);
+
+            if(RESULT === GAME_TIE){
+                turnTxt.setText("GAME TIED!");
+            }
+            if(RESULT === X_WON){
+                turnTxt.setText("X WON!");
+            }
+            if(RESULT === O_WON){
+                turnTxt.setText("O WON!");
+            }
+
+        }
+
+        let quitTxt = this.add.bitmapText(
+            dWidth/2,
+            dHeight*0.9,
+            "defaultFont",
+            "QUIT",
+            64
+        ).setOrigin(0.5,0)
+        .setInteractive();
+        
+        quitTxt.on('pointerdown', quitGame);
+        graphics.lineStyle(1, 0x0000ff);
+        graphics.strokeRectShape(quitTxt.getTextBounds().global);
+        // console.log(quitTxt.getTextBounds());
+        _this = this;
+        
+        function quitGame(){
+            resetVals();
+            _this.scene.start("menuScreen");
+        }
+
+        function resetVals(){
+            runTeam = '';
+            drawn = 0;
+            zonesArr = [];
+            boxObj = {};
+        }
+
 
         function disableMoves(arr){
             for(let i = 0; i<arr.length; i++){
@@ -155,12 +216,18 @@ class Scene3 extends Phaser.Scene {
                     }
                 }
                 if(count === 3){
+                    if(tempTeam === 'cross'){
+                        tempTeam = X_WON;
+                    }
+                    if(tempTeam === 'circle'){
+                        tempTeam = O_WON;
+                    }
                     return tempTeam;
                 } 
                 tempTeam = '';
                 count = 0;
             }
-            return false;
+            return GAME_TIE;
         }
 
 
@@ -168,12 +235,7 @@ class Scene3 extends Phaser.Scene {
     update(){}
 
     /*TODO:
-        * 
-        * - on click for each zone it will be assigned a value based on current
-        * team
-        * - on click on zone spawn an image in that zone of that team sign
-        *   (cross or circle)
-        * - calculate win
-        * - add quit/restart button
+        * - make buttons look like buttons (action on press or feedback)
+        * - add sound feedback for each button type
         */
 }
