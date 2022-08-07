@@ -237,6 +237,6 @@ class Scene3 extends Phaser.Scene {
     /*TODO:
         * - make buttons look like buttons (action on press or feedback)
         * - add sound feedback for each button type
-        * - add AI to fight against
+        * - add AI to fight against (minmaxxer)
         */
 }
